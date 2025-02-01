@@ -47,11 +47,7 @@
 
     <body>
         <div class="sidenav">
-            {% if user_is.authenticated %}
-                <p id="username" class="border-bottom border-dark">Welcome {{ user }}!</p>
-            {% else %}
-                <p id="username" class="border-bottom border-dark">Welcome to ToDoLists!</p>
-            {% endif %}
+            <p id="username" class="border-bottom border-dark">Welcome {{ user }}!</p>
             <a href="/">Home</a>
             <a href="/create">Create</a>
             <a href="/view">View</a>
