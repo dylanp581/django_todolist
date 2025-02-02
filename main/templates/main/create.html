@@ -17,6 +17,6 @@
         </form>
     {% else %}
         <h2>Create Page</h2>
-        <p>Sorry, you have to be <a href="/login">logged in</a> or <a href="/register">registered</a> to be able to use this page.</p>
+        <p>Sorry, you have to be <a href="{% url 'login' %}">logged in</a> or <a href="{% url 'register' %}">registered</a> to be able to use this page.</p>
     {% endif %}
 {% endblock %}

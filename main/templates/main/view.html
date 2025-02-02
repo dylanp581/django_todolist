@@ -11,6 +11,6 @@
         </div>
         {% endfor %}
     {% else %}
-        <p>In order to view your lists you need to be <a href="/login">logged in</a> or <a href="/register">registered</a>.</p>
+        <p>In order to view your lists you need to be <a href="{% url 'login' %}">logged in</a> or <a href="{% url 'register' %}">registered</a>.</p>
     {% endif %}
 {% endblock %}
