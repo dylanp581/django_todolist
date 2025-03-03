@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import ToDoList, Item, User
 from .forms import CreateNewList
@@ -75,3 +75,15 @@ def create(response):
 
 def view(response):
     return render(response, "main/view.html", {ToDoList.id:"td.id"})
+
+def fetch_profile(request):
+    user = request.user
+    user.delete()
+
+def profile(response):
+    if response.method == "POST":
+        print(response.POST)
+        if response.POST.get("delete_account"):
+            fetch_profile(response)
+            return redirect("/home")
+    return render(response, "main/profile.html", {})

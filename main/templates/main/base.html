@@ -7,6 +7,11 @@
                 color: #f1f1f191;
             }
 
+            #profile_id {
+                font-size: 13px;
+                padding: 5px;
+            }
+
             .sidenav {
                 height: 100%;
                 width: 160px;
@@ -46,12 +51,22 @@
     </head>
 
     <body>
+        {% if user.is_authenticated %}
+        <div class="sidenav">
+            <p id="username">Welcome {{ user }}!</p>
+            <a href="/profile" id="profile_id" class="border-bottom border-dark">View Profile</a>
+            <a href="/">Home</a>
+            <a href="/create">Create</a>
+            <a href="/view">View</a>
+        </div>
+        {% else %}
         <div class="sidenav">
             <p id="username" class="border-bottom border-dark">Welcome {{ user }}!</p>
             <a href="/">Home</a>
             <a href="/create">Create</a>
             <a href="/view">View</a>
         </div>
+        {% endif %}
         <div id="content", name="content", class="main">
             <div class="row justify-content-center">
                 <div class="col-8">

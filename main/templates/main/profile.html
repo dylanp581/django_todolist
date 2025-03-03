@@ -1,0 +1,14 @@
+{% extends 'main/base.html' %}
+{% block content %}
+<h2>Profile</h2>
+<br>
+<br>
+<p>Username = {{ user.username }}</p>
+<br>
+<p>Email = {{ user.email }}</p>
+<br>
+<form method="post" class="form-group">
+    {% csrf_token %}
+    <button type="submit" name="delete_account" value="delete_account" class="btn btn-success btn btn-danger">Delete Account</button>
+</form>
+{% endblock %}
