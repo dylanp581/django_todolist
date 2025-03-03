@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import ToDoList, Item
+from .models import ToDoList, Item, User
 from .forms import CreateNewList
+from django.contrib.auth.decorators import login_required
 import datetime
 # Create your views here.
 
