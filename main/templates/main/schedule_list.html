@@ -5,6 +5,7 @@
     <h2>Your Schedule</h2>
 
     <!-- Draggable Schedule List -->
+    {% if user.is_authenticated %}
     <div id="schedule-list" class="draggable-list">
         {% for item in schedule_items %}
         <div 
@@ -50,6 +51,9 @@
     <form action="{% url 'create_schedule' %}" style="padding-top: 20px;">
         <button class="btn btn-primary">Add New Schedule Item</button>
     </form>
+    {% else %}
+        <p>In order to view your schedule you need to be <a href="{% url 'login' %}">logged in</a> or <a href="{% url 'register' %}">registered</a>.</p>
+    {% endif %}
 </div>
 
 <style>

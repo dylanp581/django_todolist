@@ -5,6 +5,14 @@ from .forms import CreateNewList, ScheduleItemForm
 from django.contrib.auth.decorators import login_required
 
 
+def login_required_with_redirect(view_func):
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            # Redirect to login page with next parameter
+            return redirect(f'/login/?next={request.path}')
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
 def base(response):
     current_user = request.user
     context = {
@@ -12,6 +20,7 @@ def base(response):
     }
     return render(request, 'base.html', context)
 
+@login_required_with_redirect
 def index(response, id):
     ls = ToDoList.objects.get(id=id)
 
@@ -53,6 +62,7 @@ def index(response, id):
 def home(response):
     return render(response, "main/home.html", {})
 
+@login_required_with_redirect
 def create(response):
     if response.method == "POST":
         form = CreateNewList(response.POST)
@@ -72,6 +82,7 @@ def create(response):
 
     return render(response, "main/create.html", {"form": form})
 
+@login_required_with_redirect
 def view(response):
     return render(response, "main/view.html", {ToDoList.id:"td.id"})
 
@@ -87,7 +98,7 @@ def profile(response):
             return redirect("/home")
     return render(response, "main/profile.html", {})
 
-@login_required
+@login_required_with_redirect
 def create_schedule_item(request):
     if request.method == 'POST':
         form = ScheduleItemForm(request.POST)
@@ -100,13 +111,13 @@ def create_schedule_item(request):
         form = ScheduleItemForm()
     return render(request, 'main/create_schedule.html', {'form': form})
 
-@login_required
+@login_required_with_redirect
 def schedule_list(request):
     # Order items by the 'order' field
     schedule_items = ScheduleItem.objects.filter(user=request.user).order_by('order')
     return render(request, 'main/schedule_list.html', {'schedule_items': schedule_items})
 
-@login_required
+@login_required_with_redirect
 def delete_schedule_item(request, item_id):
     # Get the specific schedule item, ensuring it belongs to the current user
     schedule_item = get_object_or_404(ScheduleItem, id=item_id, user=request.user)
@@ -119,13 +130,13 @@ def delete_schedule_item(request, item_id):
     # Render confirmation template
     return render(request, 'main/delete_schedule_item.html', {'item': schedule_item})
 
-@login_required
+@login_required_with_redirect
 def schedule_list(request):
     # Order by start time instead
     schedule_items = ScheduleItem.objects.filter(user=request.user).order_by('start_time')
     return render(request, 'main/schedule_list.html', {'schedule_items': schedule_items})
 
-@login_required
+@login_required_with_redirect
 def toggle_schedule_item(request, item_id):
     schedule_item = get_object_or_404(ScheduleItem, id=item_id, user=request.user)
 
