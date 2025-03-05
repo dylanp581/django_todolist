@@ -1,10 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import ToDoList, Item, User
-from .forms import CreateNewList
+from .models import ToDoList, Item, User, ScheduleItem
+from .forms import CreateNewList, ScheduleItemForm
 from django.contrib.auth.decorators import login_required
-import datetime
-# Create your views here.
+
 
 def base(response):
     current_user = request.user
@@ -20,7 +19,7 @@ def index(response, id):
 
         if response.method == "POST":
             print(response.POST)
-            if response.POST.get("save"):
+            if response.POST.save:
                 for item in ls.item_set.all():
                     if response.POST.get("c" + str(item.id)) == "clicked":
                         item.complete = True
@@ -30,21 +29,21 @@ def index(response, id):
                     item.save()
 
 
-            elif response.POST.get("newItem"):
-                txt = response.POST.get("new")
+            elif response.POST.newItem:
+                txt = response.POST.new
 
                 if len(txt) > 2:
                     ls.item_set.create(text=txt, complete = False)
                 else:
                     print("invalid")
 
-            elif response.POST.get("delete"):
+            elif response.POST.delete:
                 del_object = ToDoList.objects.get(id=id)
                 del_object.delete()
                 return HttpResponseRedirect("/view")
-            
-            elif response.POST.get("delete_item"):
-                item_id = response.POST.get("delete_item")
+
+            elif response.POST.delete_item:
+                item_id = response.POST.delete_item
                 item = Item.objects.get(id=int(item_id))
                 item.delete()
 
@@ -78,7 +77,7 @@ def view(response):
 
 def fetch_profile(request):
     user = request.user
-    user.delete()
+    user.save()
 
 def profile(response):
     if response.method == "POST":
@@ -87,3 +86,52 @@ def profile(response):
             fetch_profile(response)
             return redirect("/home")
     return render(response, "main/profile.html", {})
+
+@login_required
+def create_schedule_item(request):
+    if request.method == 'POST':
+        form = ScheduleItemForm(request.POST)
+        if form.is_valid():
+            schedule_item = form.save(commit=False)
+            schedule_item.user = request.user
+            schedule_item.save()
+            return redirect('schedule_list')
+    else:
+        form = ScheduleItemForm()
+    return render(request, 'main/create_schedule.html', {'form': form})
+
+@login_required
+def schedule_list(request):
+    # Order items by the 'order' field
+    schedule_items = ScheduleItem.objects.filter(user=request.user).order_by('order')
+    return render(request, 'main/schedule_list.html', {'schedule_items': schedule_items})
+
+@login_required
+def delete_schedule_item(request, item_id):
+    # Get the specific schedule item, ensuring it belongs to the current user
+    schedule_item = get_object_or_404(ScheduleItem, id=item_id, user=request.user)
+
+    if request.method == 'POST':
+        # Delete the item
+        schedule_item.delete()
+        return redirect('schedule_list')
+
+    # Render confirmation template
+    return render(request, 'main/delete_schedule_item.html', {'item': schedule_item})
+
+@login_required
+def schedule_list(request):
+    # Order by start time instead
+    schedule_items = ScheduleItem.objects.filter(user=request.user).order_by('start_time')
+    return render(request, 'main/schedule_list.html', {'schedule_items': schedule_items})
+
+@login_required
+def toggle_schedule_item(request, item_id):
+    schedule_item = get_object_or_404(ScheduleItem, id=item_id, user=request.user)
+
+    if request.method == 'POST':
+        # Toggle the completion status
+        schedule_item.is_completed = not schedule_item.is_completed
+        schedule_item.save()
+
+    return redirect('schedule_list')

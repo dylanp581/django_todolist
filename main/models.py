@@ -16,3 +16,14 @@ class Item(models.Model):
 
     def __str__(self):
         return self.text
+    
+class ScheduleItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    activity = models.CharField(max_length=200)
+    date = models.DateField()
+    is_completed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.activity} at {self.start_time}"

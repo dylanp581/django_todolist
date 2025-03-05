@@ -1,0 +1,92 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Your Schedule</h2>
+
+    <!-- Draggable Schedule List -->
+    <div id="schedule-list" class="draggable-list">
+        {% for item in schedule_items %}
+        <div 
+            class="schedule-item {% if item.is_completed %}completed-item{% endif %}" 
+            draggable="true" 
+            data-id="{{ item.id }}"
+            style="padding-top: 5px; padding-bottom: 5px;"
+        >
+            <div class="schedule-item-wrapper">
+                <!-- Checkbox moved to the left -->
+                <div class="checkbox-container">
+                    <form action="{% url 'toggle_schedule_item' item.id %}" method="post" class="completion-form">
+                        {% csrf_token %}
+                        <input 
+                            type="checkbox" 
+                            onchange="this.form.submit()"
+                            {% if item.is_completed %}checked{% endif %}
+                        >
+                    </form>
+                </div>
+
+                <div class="schedule-item-content">
+                    <span class="time-slot">
+                        {{ item.start_time }} - {{ item.end_time }}
+                    </span>
+                    <span class="activity">
+                        {{ item.activity }}
+                    </span>
+                </div>
+
+                <div class="schedule-item-actions">
+                    <form action="{% url 'delete_schedule_item' item.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Trash</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Add New Schedule Item Button -->
+    <form action="{% url 'create_schedule' %}" style="padding-top: 20px;">
+        <button class="btn btn-primary">Add New Schedule Item</button>
+    </form>
+</div>
+
+<style>
+    .schedule-item-wrapper {
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+
+    .checkbox-container {
+        margin-right: 15px;
+        display: flex;
+        align-items: center;
+    }
+
+    .completion-form {
+        margin: 0;
+        padding: 0;
+    }
+
+    .schedule-item-content {
+        flex-grow: 1;
+    }
+
+    .schedule-item-actions {
+        margin-left: 15px;
+    }
+
+    .completed-item {
+        text-decoration: line-through;
+        color: gray;
+        opacity: 0.6;
+    }
+
+    /* Ensure checkbox is vertically centered */
+    .checkbox-container input[type="checkbox"] {
+        margin: 0;
+    }
+</style>
+{% endblock %}
