@@ -3,18 +3,18 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import RegisterForm
 
 # Create your views here.
-def register(response):
-    if response.method == "POST":
-        form = RegisterForm(response.POST)
+def register(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(response, user)
+            login(request, user)
 
             return redirect("/home")
     else:
         form = RegisterForm()
 
-    return render(response, "register/register.html", {"form":form})
+    return render(request, "register/register.html", {"form":form})
 
 def login_user(request):
     if request.method == "POST":

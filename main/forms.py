@@ -8,7 +8,7 @@ class CreateNewList(forms.Form):
 class ScheduleItemForm(forms.ModelForm):
     class Meta:
         model = ScheduleItem
-        fields = ['start_time', 'end_time', 'activity', 'date', 'is_completed']
+        fields = ['start_time', 'end_time', 'activity', 'date']
         widgets = {
             'start_time': forms.TimeInput(attrs={'type': 'time'}),
             'end_time': forms.TimeInput(attrs={'type': 'time'}),

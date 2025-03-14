@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .models import ToDoList, Item, User, ScheduleItem
 from .forms import CreateNewList, ScheduleItemForm
 from django.contrib.auth.decorators import login_required
+import json
 
 
 def login_required_with_redirect(view_func):
@@ -13,7 +14,7 @@ def login_required_with_redirect(view_func):
         return view_func(request, *args, **kwargs)
     return wrapper
 
-def base(response):
+def base(request):
     current_user = request.user
     context = {
         'user': current_user,
@@ -21,16 +22,16 @@ def base(response):
     return render(request, 'base.html', context)
 
 @login_required_with_redirect
-def index(response, id):
+def index(request, id):
     ls = ToDoList.objects.get(id=id)
 
-    if ls in response.user.todolist.all():
+    if ls in request.user.todolist.all():
 
-        if response.method == "POST":
-            print(response.POST)
-            if response.POST.save:
+        if request.method == "POST":
+            print(request.POST)
+            if request.POST.save:
                 for item in ls.item_set.all():
-                    if response.POST.get("c" + str(item.id)) == "clicked":
+                    if request.POST.get("c" + str(item.id)) == "clicked":
                         item.complete = True
                     else:
                         item.complete = False
@@ -38,65 +39,65 @@ def index(response, id):
                     item.save()
 
 
-            elif response.POST.newItem:
-                txt = response.POST.new
+            elif request.POST.newItem:
+                txt = request.POST.new
 
                 if len(txt) > 2:
                     ls.item_set.create(text=txt, complete = False)
                 else:
                     print("invalid")
 
-            elif response.POST.delete:
+            elif request.POST.delete:
                 del_object = ToDoList.objects.get(id=id)
                 del_object.delete()
                 return HttpResponseRedirect("/view")
 
-            elif response.POST.delete_item:
-                item_id = response.POST.delete_item
+            elif request.POST.delete_item:
+                item_id = request.POST.delete_item
                 item = Item.objects.get(id=int(item_id))
                 item.delete()
 
-        return render(response, "main/list.html", {"ls":ls})
-    return render(response, "main/view.html", {})
+        return render(request, "main/list.html", {"ls":ls})
+    return render(request, "main/view.html", {})
 
-def home(response):
-    return render(response, "main/home.html", {})
+def home(request):
+    return render(request, "main/home.html", {})
 
 @login_required_with_redirect
-def create(response):
-    if response.method == "POST":
-        form = CreateNewList(response.POST)
+def create(request):
+    if request.method == "POST":
+        form = CreateNewList(request.POST)
 
         if form.is_valid():
             n = form.cleaned_data["name"]
             t = ToDoList(name=n)
             t.save()
 
-            if response.user.is_authenticated:
-                response.user.todolist.add(t)
+            if request.user.is_authenticated:
+                request.user.todolist.add(t)
 
         return HttpResponseRedirect("/%i" %t.id)    
 
     else:
         form = CreateNewList()
 
-    return render(response, "main/create.html", {"form": form})
+    return render(request, "main/create.html", {"form": form})
 
 @login_required_with_redirect
-def view(response):
-    return render(response, "main/view.html", {ToDoList.id:"td.id"})
+def view(request):
+    return render(request, "main/view.html", {ToDoList.id:"td.id"})
 
 def fetch_profile(request):
     user = request.user
     user.save()
 
-def profile(response):
-    if response.method == "POST":
-        print(response.POST)
-        if response.POST.get("delete_account"):
-            fetch_profile(response)
+def profile(request):
+    if request.method == "POST":
+        print(request.POST)
+        if request.POST.get("delete_account"):
+            fetch_profile(request)
             return redirect("/home")
-    return render(response, "main/profile.html", {})
+    return render(request, "main/profile.html", {})
 
 @login_required_with_redirect
 def create_schedule_item(request):
