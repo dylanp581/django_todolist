@@ -75,7 +75,7 @@
         <div class="container mt-4">
         {% if user.is_authenticated %}
         <div class="sidenav">
-            <p id="username">Welcome {{ user }}!</p>
+            <p id="username" class="border-bottom border-dark">Welcome {{ user }}!</p>
             <a href="{% url 'create' %}">Create List</a>
             <a href="{% url 'view' %}">View List</a>
             <a href="{% url 'create_schedule' %}">Make Schedule</a>
