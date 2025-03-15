@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .models import ToDoList, Item, User, ScheduleItem
 from .forms import CreateNewList, ScheduleItemForm
 from django.contrib.auth.decorators import login_required
-import json
+from django.utils import timezone
 
 
 def login_required_with_redirect(view_func):
@@ -147,3 +147,19 @@ def toggle_schedule_item(request, item_id):
         schedule_item.save()
 
     return redirect('schedule_list')
+
+def get_upcoming_schedule_items(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'items': []})
+
+    # Get items within the next hour
+    now = timezone.now()
+    upcoming_items = ScheduleItem.objects.filter(
+        user=request.user,
+        date=now.date(),
+        start_time__gte=now.time(),
+        start_time__lte=(now + timezone.timedelta(hours=1)).time(),
+        is_completed=False
+    ).values('activity', 'start_time', 'end_time')
+
+    return JsonResponse({'items': list(upcoming_items)})
