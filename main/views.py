@@ -29,7 +29,7 @@ def index(request, id):
 
         if request.method == "POST":
             print(request.POST)
-            if request.POST.save:
+            if request.POST.get("save"):
                 for item in ls.item_set.all():
                     if request.POST.get("c" + str(item.id)) == "clicked":
                         item.complete = True
@@ -39,21 +39,21 @@ def index(request, id):
                     item.save()
 
 
-            elif request.POST.newItem:
-                txt = request.POST.new
+            elif request.POST.get("newItem"):
+                txt = request.POST.get("new")
 
                 if len(txt) > 2:
                     ls.item_set.create(text=txt, complete = False)
                 else:
                     print("invalid")
 
-            elif request.POST.delete:
+            elif request.POST.get("delete"):
                 del_object = ToDoList.objects.get(id=id)
                 del_object.delete()
                 return HttpResponseRedirect("/view")
 
-            elif request.POST.delete_item:
-                item_id = request.POST.delete_item
+            elif request.POST.get("delete_item"):
+                item_id = request.POST.get("delete_item")
                 item = Item.objects.get(id=int(item_id))
                 item.delete()
 
@@ -147,19 +147,3 @@ def toggle_schedule_item(request, item_id):
         schedule_item.save()
 
     return redirect('schedule_list')
-
-def get_upcoming_schedule_items(request):
-    if not request.user.is_authenticated:
-        return JsonResponse({'items': []})
-
-    # Get items within the next hour
-    now = timezone.now()
-    upcoming_items = ScheduleItem.objects.filter(
-        user=request.user,
-        date=now.date(),
-        start_time__gte=now.time(),
-        start_time__lte=(now + timezone.timedelta(hours=1)).time(),
-        is_completed=False
-    ).values('activity', 'start_time', 'end_time')
-
-    return JsonResponse({'items': list(upcoming_items)})

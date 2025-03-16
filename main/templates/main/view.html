@@ -3,14 +3,10 @@
 {% block title %}View{% endblock %}
 
 {% block content %}
-    {% if user.is_authenticated %}
-        <h2>My Lists:</h2>
-        {% for td in user.todolist.all %}
-        <div class="form-control">
-            <p><a href="/{{td.id}}">{{td.name}}</a></p>
-        </div>
-        {% endfor %}
-    {% else %}
-        <p>In order to view your lists you need to be <a href="{% url 'login' %}">logged in</a> or <a href="{% url 'register' %}">registered</a>.</p>
-    {% endif %}
+    <h2>My Lists:</h2>
+    {% for td in user.todolist.all %}
+    <div class="form-control">
+        <p><a href="/{{td.id}}">{{td.name}}</a></p>
+    </div>
+    {% endfor %}
 {% endblock %}
