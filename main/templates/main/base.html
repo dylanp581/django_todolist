@@ -42,6 +42,11 @@
                 padding: 0px 10px;
             }
 
+            @media (max-width: 768px) {
+                .sidenav {
+                    display: none;
+                }
+            }
         </style>
 
         <meta charset="utf-8">
@@ -60,7 +65,18 @@
                 </div>
                 <div class="navbar-nav">
                     {% if user.is_authenticated %}
-                        <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
+                        <div class="dropdown d-lg-none">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="sidebarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                Menu
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="sidebarDropdown">
+                                <li><a class="dropdown-item" href="{% url 'create' %}">Create List</a></li>
+                                <li><a class="dropdown-item" href="{% url 'view' %}">View List</a></li>
+                                <li><a class="dropdown-item" href="{% url 'create_schedule' %}">Make Schedule</a></li>
+                                <li><a class="dropdown-item" href="{% url 'schedule_list' %}">Schedule</a></li>
+                            </ul>
+                        </div>
+                        <a class="nav-item nav-link d-none d-lg-block" href="{% url 'profile' %}">Profile</a>
                         <form id="logout-form" action="{% url 'logout' %}" method="POST">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-link nav-item nav-link">Logout</button>
@@ -74,15 +90,7 @@
         </nav>
         <div class="container mt-4">
         {% if user.is_authenticated %}
-        <div class="sidenav">
-            <p id="username" class="border-bottom border-dark">Welcome {{ user }}!</p>
-            <a href="{% url 'create' %}">Create List</a>
-            <a href="{% url 'view' %}">View List</a>
-            <a href="{% url 'create_schedule' %}">Make Schedule</a>
-            <a href="{% url 'schedule_list' %}">Schedule</a>
-        </div>
-        {% else %}
-        <div class="sidenav">
+        <div class="sidenav d-none d-lg-block">
             <p id="username" class="border-bottom border-dark">Welcome {{ user }}!</p>
             <a href="{% url 'create' %}">Create List</a>
             <a href="{% url 'view' %}">View List</a>
