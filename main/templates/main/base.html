@@ -50,8 +50,8 @@
                 .sidenav {
                     width: 35%;
                     height: auto;
-                    position: fixed;
-                    background-color: #222; /* Darker shade for better contrast */
+                    position: relative;
+                    background-color: #333;
                     padding: 10px 0;
                 }
 
@@ -61,7 +61,7 @@
                     text-align: left;
                     font-size: 16px;
                     color: #f1f1f1;
-                    border-bottom: 1px solid #666;
+                    border-bottom: 1px solid #444;
                 }
 
                 .sidenav a:hover {
@@ -97,6 +97,31 @@
                 .navbar-nav .btn:hover {
                     background-color: #575757;
                 }
+            }
+
+            /* Additional mobile-friendly styles */
+            body {
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                color: #333;
+                background-color: #f8f9fa;
+            }
+
+            .container {
+                max-width: 100%;
+                padding: 15px;
+            }
+
+            .btn {
+                border-radius: 5px;
+                padding: 10px 20px;
+                font-size: 16px;
+                transition: background-color 0.3s, color 0.3s;
+            }
+
+            .btn:hover {
+                background-color: #0056b3;
+                color: #fff;
             }
         </style>
 
