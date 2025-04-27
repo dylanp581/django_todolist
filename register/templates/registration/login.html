@@ -5,10 +5,11 @@
 
 
 {% block content %}
-    <form method="post" class="form-group">
+    <form method="post" class="form-group bg-light p-4 rounded shadow-sm">
         {% csrf_token %}
+        <h2 class="text-center mb-4">Login</h2>
         {{ form|crispy }}
-        <p>Login to use the pages. Don't have an account? Create one <a href="/register">here</a>.</p>
-        <button type="submit" class="btn btn-success btn-block">Login</button>
+        <p class="text-center">Don't have an account? <a href="/register">Create one here</a>.</p>
+        <button type="submit" class="btn btn-primary btn-block">Login</button>
     </form>
 {% endblock %}
