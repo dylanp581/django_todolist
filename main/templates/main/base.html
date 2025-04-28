@@ -46,15 +46,22 @@
                 .sidenav {
                     display: none;
                 }
-                .main {
-                    margin-left: 0;
-                    padding: 0px 10px;
-                }
             }
 
+        </style>
+
+        <style>
             @media (min-width: 769px) {
-                .navbar {
-                    display: none;
+                .dropdown-menu {
+                    display: none !important;
+                }
+            }
+        </style>
+
+        <style>
+            @media (min-width: 769px) {
+                .nav-item.dropdown {
+                    display: none !important;
                 }
             }
         </style>
@@ -68,49 +75,44 @@
     </head>
 
     <body>
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
-            <div class="container-fluid">
-                <div class="d-flex justify-content-center w-100">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+                <div class="navbar-nav mx-auto">
                     <a class="navbar-brand" href="{% url 'home' %}">Home</a>
                 </div>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        {% if user.is_authenticated %}
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Menu
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="{% url 'create' %}">Create List</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'view' %}">View List</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'create_schedule' %}">Make Schedule</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'schedule_list' %}">Schedule</a></li>
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'profile' %}">Profile</a>
-                            </li>
-                            <li class="nav-item">
-                                <form id="logout-form" action="{% url 'logout' %}" method="POST">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-link nav-link">Logout</button>
-                                </form>
-                            </li>
-                        {% else %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'login' %}">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'register' %}">Register</a>
-                            </li>
-                        {% endif %}
-                    </ul>
+                <div class="navbar-nav">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Menu
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{% url 'create' %}">Create List</a></li>
+                            <li><a class="dropdown-item" href="{% url 'view' %}">View List</a></li>
+                            <li><a class="dropdown-item" href="{% url 'create_schedule' %}">Make Schedule</a></li>
+                            <li><a class="dropdown-item" href="{% url 'schedule_list' %}">Schedule</a></li>
+                        </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <form id="logout-form" action="{% url 'logout' %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-link nav-link">Logout</button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'register' %}">Register</a>
+                        </li>
+                    {% endif %}
                 </div>
             </div>
-        </nav>          
+        </nav>
         <div class="container mt-4">
         {% if user.is_authenticated %}
         <div class="sidenav">
