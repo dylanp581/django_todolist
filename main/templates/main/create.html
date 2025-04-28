@@ -2,6 +2,17 @@
 
 {% block title %} Create New List {% endblock %}
 
+<style>
+    @media (max-width: 768px) {
+        .input-group {
+            flex-direction: column;
+        }
+        .input-group-prepend {
+            margin-bottom: 10px;
+        }
+    }
+</style>
+
 {% block content %}
     {% if user.is_authenticated %}
         <h2>Create Page</h2>
@@ -10,7 +21,7 @@
             {% csrf_token %}
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <button type="submit", name="save" class="btn btn-success">Create New</button>
+                    <button type="submit" name="save" class="btn btn-success">Create New</button>
                 </div>
                 {{form.name}}
             </div>
