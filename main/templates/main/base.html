@@ -168,23 +168,8 @@
             </div>
         </footer>
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                var dropdowns = document.querySelectorAll('.dropdown-toggle');
-                dropdowns.forEach(function(dropdown) {
-                    dropdown.addEventListener('click', function() {
-                        var menu = this.nextElementSibling;
-                        menu.classList.toggle('show');
-                    });
-                });
-            });
-            document.addEventListener('click', function(event) {
-                var dropdowns = document.querySelectorAll('.dropdown-menu');
-                dropdowns.forEach(function(menu) {
-                    if (!menu.contains(event.target)) {
-                        menu.classList.remove('show');
-                    }
-                });
-            });
+            // Add event listener to the logout form
+            // to confirm before submitting
             var logoutForm = document.getElementById('logout-form');
             if (logoutForm) {
                 logoutForm.addEventListener('submit', function(event) {
