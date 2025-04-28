@@ -69,6 +69,18 @@
                     order: 1;
                 }
             }
+
+            body {
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
+            .content {
+                flex: 1;
+            }
+            footer {
+                margin-top: auto;
+            }
         </style>
 
         <meta charset="utf-8">
@@ -120,7 +132,7 @@
                 </div>
             </div>
         </nav>
-        <div class="container mt-4">
+        <div class="container mt-4 content">
         {% if user.is_authenticated %}
         <div class="sidenav">
             <p id="username" class="border-bottom border-dark">Welcome {{ user }}!</p>
@@ -148,6 +160,41 @@
                 </div>
             </div>
         </div>
+        </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <footer class="mt-4">
+            <div class="container text-center">
+                <p>      </p>
+            </div>
+        </footer>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var dropdowns = document.querySelectorAll('.dropdown-toggle');
+                dropdowns.forEach(function(dropdown) {
+                    dropdown.addEventListener('click', function() {
+                        var menu = this.nextElementSibling;
+                        menu.classList.toggle('show');
+                    });
+                });
+            });
+            document.addEventListener('click', function(event) {
+                var dropdowns = document.querySelectorAll('.dropdown-menu');
+                dropdowns.forEach(function(menu) {
+                    if (!menu.contains(event.target)) {
+                        menu.classList.remove('show');
+                    }
+                });
+            });
+            var logoutForm = document.getElementById('logout-form');
+            if (logoutForm) {
+                logoutForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    var confirmation = confirm('Are you sure you want to log out?');
+                    if (confirmation) {
+                        this.submit();
+                    }
+                });
+            }
+        </script>
     </body>
 </html>
